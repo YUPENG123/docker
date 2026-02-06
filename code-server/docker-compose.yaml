@@ -15,7 +15,7 @@ services:
       - PROXY_DOMAIN=code-server.my.domain #optional
       - DEFAULT_WORKSPACE=/config/workspace #optional
       - PWA_APPNAME=code-server #optional
-      # - EXTENSIONS_GALLERY= {"serviceUrl":"https://marketplace.visualstudio.com/vscode","itemUrl":"https://marketplace.visualstudio.com/vscode"}
+      ## - EXTENSIONS_GALLERY= {"serviceUrl":"https://marketplace.visualstudio.com/vscode","itemUrl":"https://marketplace.visualstudio.com/vscode"}
     volumes:
       - /code-server/config:/config
     ports:
