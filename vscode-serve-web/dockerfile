@@ -1,0 +1,23 @@
+# 使用 Ubuntu 作为基础镜像
+FROM ubuntu:22.04
+
+# 安装必要依赖
+RUN apt-get update && apt-get install -y curl ca-certificates && rm -rf /var/lib/apt/lists/*
+
+# 下载并解压官方 VS Code CLI
+RUN curl -sL "https://code.visualstudio.com" \
+    --output /tmp/vscode-cli.tar.gz && \
+    tar -xf /tmp/vscode-cli.tar.gz -C /usr/bin && \
+    rm /tmp/vscode-cli.tar.gz
+
+# 创建工作目录
+WORKDIR /home/workspace
+
+# 暴露服务端口（默认 8000）
+EXPOSE 8000
+
+# 启动 Web 服务
+# --accept-server-license-terms: 必须接受许可协议
+# --without-connection-token: 禁用 Token 验证（生产环境建议开启）
+# --host 0.0.0.0: 允许外部访问
+CMD ["code", "serve-web", "--accept-server-license-terms", "--host", "0.0.0.0", "--port", "8000", "--without-connection-token"]
