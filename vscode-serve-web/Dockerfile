@@ -5,10 +5,7 @@ FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y curl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # 下载并解压官方 VS Code CLI
-RUN curl -sL "https://code.visualstudio.com" \
-    --output /tmp/vscode-cli.tar.gz && \
-    tar -xf /tmp/vscode-cli.tar.gz -C /usr/bin && \
-    rm /tmp/vscode-cli.tar.gz
+ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
 
 # 创建工作目录
 WORKDIR /home/workspace
