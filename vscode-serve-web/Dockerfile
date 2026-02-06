@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y curl ca-certificates && rm -rf /var/lib
 
 # 下载并解压官方 VS Code CLI
 ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
+RUN cd /usr/bin && \
+		chmod +x code
 
 # 创建工作目录
 WORKDIR /home/workspace
