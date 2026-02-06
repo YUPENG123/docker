@@ -1,0 +1,18 @@
+services:
+  v2raya:
+    image: mzz2017/v2raya:latest
+    container_name: v2raya
+    restart: always
+    environment:
+      - V2RAYA_LOG_FILE=/etc/v2raya/v2raya.log
+      # 如果需要指定端口，可以取消下面注释并修改
+      # - V2RAYA_ADDRESS=0.0.0.0:2017
+      - V2RAYA_V2RAY_BIN=/usr/local/bin/v2ray
+      - V2RAYA_NFTABLES_SUPPORT=off # 如果你的内核较旧不支持nftables，请保持off
+      - IPTABLES_MODE=legacy
+      - V2RAYA_LOG_LEVEL=error
+    volumes:
+      - /lib/modules:/lib/modules:ro
+      - /etc/v2raya:/etc/v2raya
+    network_mode: host
+    privileged: true
