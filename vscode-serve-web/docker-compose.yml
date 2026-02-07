@@ -6,8 +6,8 @@ services:
     restart: always
     ports:
        - "8000:8000"
-    # volumes:
-      # - /opt/sub-store-data:/opt/app/data
+    volumes:
+      - /var/www/html/:/var/www/html
     # environment:
       # - SUB_STORE_BACKEND_CRON=0 0 * * *
     stdin_open: true
