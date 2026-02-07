@@ -1,0 +1,14 @@
+services:
+  sub-store:
+    image: vscode-serve-web:latest
+    container_name: vscode-serve-web
+    network_mode: bridge
+    restart: always
+    ports:
+       - "8000:8000"
+    # volumes:
+      # - /opt/sub-store-data:/opt/app/data
+    # environment:
+      # - SUB_STORE_BACKEND_CRON=0 0 * * *
+    stdin_open: true
+    tty: true
