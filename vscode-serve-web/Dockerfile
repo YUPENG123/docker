@@ -2,12 +2,15 @@
 FROM ubuntu:22.04
 
 # 安装必要依赖
-RUN apt-get update && apt-get install -y curl ca-certificates libatomic1 git && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+#		apt-get install -y curl ca-certificates libatomic1 git && \
+		apt-get install -y libatomic1 git && \
+		rm -rf /var/lib/apt/lists/*
 
 # 下载并解压官方 VS Code CLI
 ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
-RUN cd /usr/bin && \
-		chmod +x code
+# RUN cd /usr/bin && \
+#		chmod +x code
 
 # 创建工作目录
 WORKDIR /home/workspace
