@@ -10,6 +10,7 @@ services:
       - /var/www/html:/var/www/html
       - /mnt/sda3/root:/root
     environment:
-      - LANG=C.UTF-8
+      - LANG=zh-CN.UTF-8
+      - NODE_OPTIONS=--max-old-space-size=2048
     stdin_open: true
     tty: true
