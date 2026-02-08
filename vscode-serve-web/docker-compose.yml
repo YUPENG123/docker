@@ -9,6 +9,8 @@ services:
     volumes:
       - /var/www/html:/var/www/html
       - /mnt/sda3/root:/root
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     environment:
       - LANG=zh-CN.UTF-8
       - NODE_OPTIONS=--max-old-space-size=2048
