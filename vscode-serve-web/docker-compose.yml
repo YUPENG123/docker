@@ -9,7 +9,7 @@ services:
     volumes:
       - /var/www/html:/var/www/html
       - /mnt/sda3/root:/root
-    # environment:
-      # - SUB_STORE_BACKEND_CRON=0 0 * * *
+    environment:
+      - LANG=C.UTF-8
     stdin_open: true
     tty: true
