@@ -14,5 +14,7 @@ services:
     volumes:
       - /lib/modules:/lib/modules:ro
       - /etc/v2raya:/etc/v2raya
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     network_mode: host
     privileged: true
