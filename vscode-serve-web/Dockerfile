@@ -4,13 +4,16 @@ FROM ubuntu:latest
 # 安装必要依赖
 RUN apt-get update && \
 #		apt-get install -y curl ca-certificates libatomic1 git && \
-		apt-get install -y libatomic1 git && \
+		apt-get install -y libatomic1 git curl  && \
 		rm -rf /var/lib/apt/lists/*
 
 # 下载并解压官方 VS Code CLI
-ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
+# ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
 # RUN cd /usr/bin && \
 #		chmod +x code
+RUN curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-armhf' --output vscode_cli.tar.gz && \
+		tar -xf vscode_cli.tar.gz -C /usr/bin && \
+		rm vscode_cli.tar.gz
 
 # 创建工作目录
 WORKDIR /home/workspace
