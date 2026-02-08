@@ -7,6 +7,8 @@ services:
     restart: always
     volumes:
       - /opt/sub-store-data:/opt/app/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     environment:
       - SUB_STORE_BACKEND_CRON=0 0 * * *
       - SUB_STORE_FRONTEND_BACKEND_PATH=/1234567890
