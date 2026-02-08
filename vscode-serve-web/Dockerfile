@@ -1,5 +1,5 @@
 # 使用 Ubuntu 作为基础镜像
-FROM ubuntu:22.04
+FROM ubuntu:latest
 
 # 安装必要依赖
 RUN apt-get update && \
