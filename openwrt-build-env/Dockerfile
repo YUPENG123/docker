@@ -6,7 +6,8 @@
 
 # ARG BASE_IMAGE_TAG=20.04
 ARG BASE_IMAGE_TAG=latest
-FROM linuxplus/ubuntu:${BASE_IMAGE_TAG}
+# FROM linuxplus/ubuntu:${BASE_IMAGE_TAG}
+FROM ubuntu:${BASE_IMAGE_TAG}
 
 USER root
 
