@@ -6,6 +6,7 @@ RUN apt-get update && \
 #		apt-get install -y curl ca-certificates libatomic1 git && \
 		apt-get install -y libatomic1 git curl  && \
 		apt-get install -y locales && \
+		sed -i '/zh_CN.UTF-8/s/^# //g' /etc/locale.gen && \
 		locale-gen zh_CN.UTF-8 && \
 		update-locale LANG=zh_CN.UTF-8 && \
 		rm -rf /var/lib/apt/lists/*
