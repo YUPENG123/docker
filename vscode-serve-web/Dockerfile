@@ -5,7 +5,15 @@ FROM ubuntu:latest
 RUN apt-get update && \
 #		apt-get install -y curl ca-certificates libatomic1 git && \
 		apt-get install -y libatomic1 git curl  && \
+		apt-get install -y locales && \
+		locale-gen zh_CN.UTF-8 && \
+		update-locale LANG=zh_CN.UTF-8 && \
 		rm -rf /var/lib/apt/lists/*
+
+# 设置环境变量
+ENV LANG=zh_CN.UTF-8 \
+    LANGUAGE=zh_CN:zh \
+    LC_ALL=zh_CN.UTF-8
 
 # 下载并解压官方 VS Code CLI
 # ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
