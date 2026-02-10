@@ -1,0 +1,20 @@
+---
+services:
+  emulatorjs:
+    image: linuxserver/emulatorjs:arm32v7-1.7.2
+    container_name: emulatorjs
+    network_mode: bridge
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SUBFOLDER=/ #optional
+    volumes:
+      - /path/to/config:/config
+      - /path/to/data:/data
+    ports:
+      - 3000:3000
+      - 8080:80
+      - 4001:4001 #optional
+
+    restart: unless-stopped
