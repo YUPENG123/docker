@@ -13,7 +13,9 @@ LABEL maintainer YUPENG
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -qq && apt-get upgrade -qqy && \
-    apt-get install -qqy git wget curl vim nano htop tmux tree sudo ca-certificates zsh uuid-runtime tzdata openssh-server lrzsz xz-utils && \
+    apt-get install -qqy git wget curl vim nano htop tmux tree
+
+RUN apt-get install -qqy sudo ca-certificates zsh uuid-runtime tzdata openssh-server lrzsz xz-utils && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     mkdir /var/run/sshd && \
