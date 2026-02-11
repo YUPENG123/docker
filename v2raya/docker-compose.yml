@@ -13,7 +13,7 @@ services:
       - V2RAYA_LOG_LEVEL=error
     volumes:
       # - /lib/modules:/lib/modules:ro
-      - /mnt/sda3/data/v2raya/:/etc/v2raya/
+      - /mnt/sda3/data/etc/v2raya/:/etc/v2raya/
       - /mnt/sda3/data/v2raya/:/usr/local/share/v2raya/
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
