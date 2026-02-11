@@ -13,7 +13,7 @@ docker pull 临时设置代理
 为了单次 docker pull 或 docker push 命令使用特定的代理，您可以直接在命令行中设置环境变量。这样设置的环境变量只对当前命令有效，不会影响到其他会话或命令。
 
 示例 使用临时代理拉取 Docker 镜像
-HTTP_PROXY="http://127.0.0.1:7890" HTTPS_PROXY="http://127.0.0.1:7890" docker pull ubuntu
+HTTP_PROXY="http://192.168.1.160:10808" HTTPS_PROXY="http://192.168.1.160:10808" docker pull mzz2017/v2raya:latest
 这假定您有一个在本地端口 7890 运行的代理服务器。
 
 永久配置
