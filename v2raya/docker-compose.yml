@@ -12,7 +12,7 @@ services:
       - IPTABLES_MODE=legacy
       - V2RAYA_LOG_LEVEL=error
     volumes:
-      - /lib/modules:/lib/modules:ro
+      # - /lib/modules:/lib/modules:ro
       - /etc/v2raya:/etc/v2raya
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
