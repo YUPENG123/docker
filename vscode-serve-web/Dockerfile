@@ -1,5 +1,5 @@
 # 使用 Ubuntu 作为基础镜像
-FROM ubuntu:latest
+FROM yupeng123456/ubuntu-china:latest
 
 # 安装必要依赖
 # RUN apt-get update && \
@@ -10,16 +10,11 @@ FROM ubuntu:latest
 #		update-locale LANG=zh_CN.UTF-8 && \
 #		rm -rf /var/lib/apt/lists/*
 RUN apt update \
-    && apt-get install -y --no-install-recommends curl locales language-pack-zh-hans tzdata \
-    && locale-gen zh_CN.UTF-8 \
+    && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
 
 # 设置环境变量
-ENV LANG=zh_CN.UTF-8 
-ENV LANGUAGE=zh_CN:zh 
-ENV LC_ALL=zh_CN.UTF-8 
-ENV	TZ='Asia/Shanghai'
 
 # 下载并解压官方 VS Code CLI
 # ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
