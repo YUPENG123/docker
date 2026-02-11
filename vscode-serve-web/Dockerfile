@@ -16,10 +16,10 @@ RUN apt update \
 
 
 # 设置环境变量
-ENV LANG=zh_CN.UTF-8 \
-    LANGUAGE=zh_CN:zh \
-    LC_ALL=zh_CN.UTF-8 \
-	TZ='Asia/Shanghai'
+ENV LANG=zh_CN.UTF-8 
+ENV LANGUAGE=zh_CN:zh 
+ENV LC_ALL=zh_CN.UTF-8 
+ENV	TZ='Asia/Shanghai'
 
 # 下载并解压官方 VS Code CLI
 # ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
