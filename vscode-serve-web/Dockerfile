@@ -1,5 +1,5 @@
 # 使用 Ubuntu 作为基础镜像
-FROM yupeng123456/ubuntu-china@sha256:fb256eb2b2ba3781e74a78f6710cca4fa681714a9f2746fb7af753a5a2aff0bd
+FROM yupeng123456/ubuntu-china:latest
 
 # 安装必要依赖
 # RUN apt-get update && \
