@@ -6,7 +6,7 @@ services:
     network_mode: host
     restart: always
     volumes:
-      - /opt/sub-store-data:/opt/app/data
+      - /mnt/sda3/sub-store-data:/opt/app/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
