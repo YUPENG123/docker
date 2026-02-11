@@ -2,6 +2,7 @@ version: "3.8"  # Compose 文件格式版本
 services:
   ubuntu:
     image: ubuntu-china:latest  # 指定使用的镜像
+    network_mode: bridge
     container_name: ubuntu-china
     stdin_open: true      # 对应 docker run 中的 -i
     tty: true             # 对应 docker run 中的 -t
