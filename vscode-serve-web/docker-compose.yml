@@ -1,6 +1,6 @@
 services:
   sub-store:
-    image: vscode-serve-web:latest
+    image: yupeng123456/vscode-serve-web:latest
     container_name: vscode-serve-web
     network_mode: bridge
     restart: always
