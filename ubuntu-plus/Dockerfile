@@ -13,13 +13,13 @@ LABEL maintainer=YUPENG
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -qq && apt-get upgrade -qqy && \
-    apt-get install -qqy git wget
+    apt-get install -qqy git wget htop tmux tree curl vim nano sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils openssh-server && \
 
-RUN apt-get install -qqy htop tmux tree curl vim nano
+# RUN apt-get install -qqy htop tmux tree curl vim nano
 
-RUN apt-get install -qqy sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils
+# RUN apt-get install -qqy sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils
 
-RUN apt-get install -qqy openssh-server  && \
+# RUN apt-get install -qqy openssh-server  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     mkdir /var/run/sshd && \
