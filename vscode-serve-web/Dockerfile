@@ -10,7 +10,7 @@ FROM yupeng123456/ubuntu-china:latest
 #		update-locale LANG=zh_CN.UTF-8 && \
 #		rm -rf /var/lib/apt/lists/*
 RUN apt update \
-    && apt-get install -y --no-install-recommends curl \
+    && apt-get install -y --no-install-recommends curl libatomic1 git \
     && rm -rf /var/lib/apt/lists/*
 
 
