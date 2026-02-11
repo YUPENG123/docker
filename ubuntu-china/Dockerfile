@@ -17,7 +17,7 @@ RUN \
     && locale-gen zh_CN.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
-ENV LANG zh_CN.UTF-8  \
-    LANGUAGE zh_CN:zh  \
-    LC_ALL zh_CN.UTF-8 \
+ENV LANG=zh_CN.UTF-8  \
+    LANGUAGE=zh_CN:zh  \
+    LC_ALL=zh_CN.UTF-8 \
     TZ='Asia/Shanghai'
