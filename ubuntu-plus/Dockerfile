@@ -29,7 +29,7 @@ USER user
 WORKDIR /home/user
 
 RUN mkdir -p ~/.ssh && \
-    chmod 700 ~/.ssh && \
+    chmod 700 ~/.ssh
     # curl -fsSL git.io/oh-my-zsh.sh | bash && \
     # curl -fsSL git.io/oh-my-tmux.sh | bash
 
