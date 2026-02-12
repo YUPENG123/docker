@@ -8,7 +8,7 @@
 ARG IMAGE_TAG=latest
 FROM ubuntu:$IMAGE_TAG
 
-LABEL maintainer YUPENG
+LABEL maintainer=YUPENG
 
 ARG DEBIAN_FRONTEND=noninteractive
 
