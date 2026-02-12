@@ -8,12 +8,18 @@
 ARG IMAGE_TAG=latest
 FROM ubuntu:$IMAGE_TAG
 
-LABEL maintainer=YUPENG
+LABEL maintainer YUPENG
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -qq && apt-get upgrade -qqy && \
-    apt-get install -qqy git wget htop tmux tree curl vim nano sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils openssh-server && \
+    apt-get install -qqy git wget
+
+RUN apt-get install -qqy htop tmux tree curl vim nano
+
+RUN apt-get install -qqy sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils
+
+RUN apt-get install -qqy openssh-server  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     mkdir /var/run/sshd && \
@@ -24,9 +30,6 @@ RUN apt-get update -qq && apt-get upgrade -qqy && \
     # curl -fsSL git.io/tmate.sh | bash && \
     # curl -fsSL git.io/gotop.sh | bash -s install && \
     # curl -fsSL git.io/bashtop.sh | bash -s install
-    # RUN apt-get install -qqy htop tmux tree curl vim nano
-    # RUN apt-get install -qqy sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils
-    # RUN apt-get install -qqy openssh-server  && \
 
 USER user
 WORKDIR /home/user
