@@ -7,7 +7,7 @@
 # ARG BASE_IMAGE_TAG=20.04
 ARG BASE_IMAGE_TAG=latest
 # FROM linuxplus/ubuntu:${BASE_IMAGE_TAG}
-FROM ubuntu:${BASE_IMAGE_TAG}
+FROM yupeng123456/ubuntu-plus:${BASE_IMAGE_TAG}
 
 USER root
 
@@ -20,5 +20,5 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-USER user
-WORKDIR /home/user
+USER ubuntu
+WORKDIR /home/ubuntu
