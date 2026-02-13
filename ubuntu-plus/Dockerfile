@@ -13,26 +13,24 @@ LABEL maintainer=YUPENG
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -qq && apt-get upgrade -qqy && \
-    apt-get install -qqy git
-
-RUN apt-get install -qqy htop tmux tree curl vim nano
-
-RUN apt-get install -qqy sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils wget
-
-RUN apt-get install -qqy openssh-server  && \
+    apt-get install -qqy git wget htop tmux tree curl vim nano sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils openssh-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     mkdir /var/run/sshd && \
-    useradd -m -G sudo -s /usr/bin/zsh user && \
-    echo 'user:user' | chpasswd && \
-    echo 'user ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/user && \
-    chmod 440 /etc/sudoers.d/user
-    # curl -fsSL git.io/tmate.sh | bash && \
+    usermod  -aG sudo -s /usr/bin/zsh ubuntu && \
+    echo 'ubuntu:ubuntu' | chpasswd && \
+    echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/ubuntu && \
+    chmod 440 /etc/sudoers.d/ubuntu && \
+    usermod -s /usr/bin/zsh root && \
+    curl -fsSL git.io/tmate.sh | bash
     # curl -fsSL git.io/gotop.sh | bash -s install && \
     # curl -fsSL git.io/bashtop.sh | bash -s install
+    # RUN apt-get install -qqy htop tmux tree curl vim nano
+    # RUN apt-get install -qqy sudo ca-certificates zsh uuid-runtime tzdata  lrzsz xz-utils
+    # RUN apt-get install -qqy openssh-server  && \
 
-USER user
-WORKDIR /home/user
+USER ubuntu
+WORKDIR /home/ubuntu
 
 RUN mkdir -p ~/.ssh && \
     chmod 700 ~/.ssh
