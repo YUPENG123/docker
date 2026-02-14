@@ -16,9 +16,9 @@ ARG DEPENDS_LIST=depends-ubuntu-2004
 
 RUN apt-get update -qq && \
     apt-get upgrade -qqy && \
-    apt-get install -qqy build-essential clang flex bison gawk gettext && \
-    git-core gperf libncurses-dev libssl-dev libxml-parser-perl && \
-    python3-setuptools rsync subversion swig time wget zlib1g-dev && \
+    apt-get install -qqy build-essential clang flex bison gawk gettext \
+    git-core gperf libncurses-dev libssl-dev libxml-parser-perl \
+    python3-setuptools rsync subversion swig time wget zlib1g-dev \
     unzip libelf-dev qemu-utils upx-ucl libc6-dev-i386 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
