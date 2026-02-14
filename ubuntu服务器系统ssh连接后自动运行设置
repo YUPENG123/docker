@@ -23,7 +23,7 @@ your_username ALL=(ALL) NOPASSWD: /usr/bin/su
 在文件最后一行添加：
 bash
 if [ "$id" != "0" ]; then
-    sudo su -
+    sudo tmux a
 fi
 请谨慎使用此类代码。
 
