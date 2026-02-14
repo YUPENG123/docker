@@ -1,0 +1,21 @@
+services:
+  ubuntu-plus:
+    container_name: ubuntu-plus
+    image: yupeng123456/ubuntu-plus:latest
+    network_mode : bridge
+    hostname: YUPENG
+    ports:
+      - "10022:22"
+    volumes:
+      - /mnt/sda3/root/:/root/
+      - /mnt/sda3/home/ubuntu/:/home/ubuntu/
+      # - /mnt/sda3/home/user/:/home/user/
+      # - /mnt/sda3/data/profile.d/:/etc/profile.d/
+      - /mnt/sda3/data/zsh/:/etc/zsh/
+      - /mnt/sda3/data/vim/:/etc/vim/
+      # - /mnt/sda3/data/zsh/passwd:/etc/passwd:ro
+      # - /mnt/sda3/data/zsh/sshd_config:/etc/ssh/sshd_config
+      - /mnt/sda3/data/zsh/tmux.conf:/etc/tmux.conf
+    stdin_open: true # 对应 -i
+    tty: true        # 对应 -t
+    restart: always  # 建议添加以实现类似 -d 的后台稳定运行
