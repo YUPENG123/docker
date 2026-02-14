@@ -19,7 +19,7 @@ RUN apt-get update -qq && \
     apt-get install -qqy build-essential clang flex bison gawk gettext \
     git-core gperf libncurses-dev libssl-dev libxml-parser-perl \
     python3-setuptools rsync subversion swig time wget zlib1g-dev \
-    unzip libelf-dev qemu-utils upx-ucl libc6-dev-i386 && \
+    unzip libelf-dev qemu-utils upx-ucl libc6-dev  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     # apt-get install -qqy $(curl -fsSL git.io/${DEPENDS_LIST}) && \
