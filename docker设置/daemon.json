@@ -1,0 +1,17 @@
+{
+    "registry-mirrors": [
+    ],
+    "exec-opts": ["native.cgroupdriver=systemd"],
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+    },
+    "data-root": "/mnt/sda3/docker_data/",
+    "max-concurrent-uploads": 1,
+    "features": {
+        "containerd-snapshotter": true,
+        "containerd-migration": true
+     }
+}
+
