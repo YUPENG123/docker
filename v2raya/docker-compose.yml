@@ -16,6 +16,8 @@ services:
       - /mnt/sda3/data/v2raya/:/etc/v2raya/
       - /mnt/sda3/data/v2raya/:/usr/local/share/v2raya/
       - /mnt/sda3/data/v2raya/:/root/.local/share/v2ray/
+      - /mnt/sda3/data/v2raya/:/root/.local/share/xray/
+      # - /mnt/sda3/data/v2raya/:/var/lib
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     network_mode: host
