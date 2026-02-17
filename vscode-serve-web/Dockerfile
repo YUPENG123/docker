@@ -27,12 +27,12 @@ RUN curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-lin
 		rm vscode_cli.tar.gz
 
 # 创建工作目录
-WORKDIR /home/workspace
+WORKDIR /home/ubuntu
 
 # 暴露服务端口（默认 8000）
 EXPOSE 8000
 
-USER "1000,1000"
+USER  1000:1000
 
 # 启动 Web 服务
 # --accept-server-license-terms: 必须接受许可协议
