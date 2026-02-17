@@ -32,6 +32,8 @@ WORKDIR /home/workspace
 # 暴露服务端口（默认 8000）
 EXPOSE 8000
 
+USER "1000,1000"
+
 # 启动 Web 服务
 # --accept-server-license-terms: 必须接受许可协议
 # --without-connection-token: 禁用 Token 验证（生产环境建议开启）
