@@ -9,9 +9,10 @@ FROM yupeng123456/ubuntu-china:latest
 #		locale-gen zh_CN.UTF-8 && \
 #		update-locale LANG=zh_CN.UTF-8 && \
 #		rm -rf /var/lib/apt/lists/*
-RUN apt update \
-    && apt-get install -y --no-install-recommends curl libatomic1 git \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update && \
+     apt-get install -y --no-install-recommends curl libatomic1 git && \
+	 apt-get clean && \
+     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
 # 设置环境变量
@@ -20,8 +21,8 @@ RUN apt update \
 # ADD vscode_cli_linux_armhf_cli.tar.gz /usr/bin
 # RUN cd /usr/bin && \
 #		chmod +x code
-# RUN curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-armhf' --output vscode_cli.tar.gz && \
-RUN curl -Lk 'https://github.com/YUPENG123/docker/raw/refs/heads/main/vscode-serve-web/vscode_cli_linux_armhf_cli.tar.gz' --output vscode_cli.tar.gz && \
+RUN curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-armhf' --output vscode_cli.tar.gz && \
+# RUN curl -Lk 'https://github.com/YUPENG123/docker/raw/refs/heads/main/vscode-serve-web/vscode_cli_linux_armhf_cli.tar.gz' --output vscode_cli.tar.gz && \
 		tar -xf vscode_cli.tar.gz -C /usr/bin && \
 		rm vscode_cli.tar.gz
 
