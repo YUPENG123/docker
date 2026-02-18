@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  nvim-server:
+    image: hikariai/nvim-server:v1.2.8
+    container_name: nvim-server
+    restart: unless-stopped
+    ports:
+      - "6080:3000"
+      - "8090:8090"
+    volumes:
+      - ~/workspace:/workspace
+      - /appdata/nvim-server:/config
+    environment:
+      - UID=${UID:-1000}
+      - GID=${GID:-1000}
+      - TZ=Asia/Shanghai
+      - USER=你的用户名
+      - SECRET=你的密码
