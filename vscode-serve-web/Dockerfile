@@ -39,6 +39,6 @@ USER  1000:1000
 # --accept-server-license-terms: 必须接受许可协议
 # --without-connection-token: 禁用 Token 验证（生产环境建议开启）
 # --host 0.0.0.0: 允许外部访问
-CMD ["sudo" , "code", "serve-web", "--accept-server-license-terms", "--host", "0.0.0.0", "--port", "8000", "--without-connection-token"]
+CMD ["code", "serve-web", "--accept-server-license-terms", "--host", "0.0.0.0", "--port", "8000", "--without-connection-token"]
 
 
