@@ -1,6 +1,6 @@
 # 使用 Ubuntu 作为基础镜像
 # FROM yupeng123456/ubuntu:latest
-FROM php:8.2-cli
+FROM ubuntu:latest
 
 # 安装必要依赖
 # RUN apt-get update && \
@@ -11,7 +11,7 @@ FROM php:8.2-cli
 #		update-locale LANG=zh_CN.UTF-8 && \
 #		rm -rf /var/lib/apt/lists/*
 RUN apt update && \
-     apt-get install -y --no-install-recommends curl libatomic1 git && \
+     apt-get install -y --no-install-recommends curl libatomic1 git php-cli && \
 	 apt-get clean && \
      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
