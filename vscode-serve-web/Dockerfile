@@ -24,7 +24,7 @@ RUN apt update && \
 #		chmod +x code
 RUN curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-armhf' --output vscode_cli.tar.gz && \
 		tar -xf vscode_cli.tar.gz -C /usr/bin && \
-		rm vscode_cli.tar.gz
+		rm vscode_cli.tar.gz && \
 		echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 # RUN curl -Lk 'https://github.com/YUPENG123/docker/raw/refs/heads/main/vscode-serve-web/vscode_cli_linux_armhf_cli.tar.gz' --output vscode_cli.tar.gz && \
 
