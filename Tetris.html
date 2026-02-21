@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄罗斯方块 - React 实现</title>
+    <!-- 引入 React 和 Babel CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 引入 TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+.game-cell {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #ddd;
+}
+      .filled {
+        background-color: #3b82f6;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div id="root" class="p-6 bg-white rounded shadow-md"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, useCallback } = React;
+
+    // 游戏常量
+    const BOARD_WIDTH = 10;
+    const BOARD_HEIGHT = 20;
+    const EMPTY = 0;
+
+    // 方块形状定义
+    const SHAPES = [
+      [[1, 1, 1, 1]], // I
+      [[1, 1], [1, 1]], // O
+      [[0, 1, 0], [1, 1, 1]], // T
+      [[0, 1, 1], [1, 1, 0]], // S
+      [[1, 1, 0], [0, 1, 1]], // Z
+      [[1, 0, 0], [1, 1, 1]], // J
+      [[0, 0, 1], [1, 1, 1]]  // L
+    ];
+
+    function App() {
+      const [board, setBoard] = useState(createEmptyBoard());
+      const [currentPiece, setCurrentPiece] = useState(null);
+      const [gameOver, setGameOver] = useState(false);
+      const [score, setScore] = useState(0);
+
+      function createEmptyBoard() {
+        return Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(EMPTY));
+      }
+
+      const spawnPiece = useCallback(() => {
+        const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+        const newPiece = {
+          shape,
+          x: Math.floor(BOARD_WIDTH / 2) - Math.floor(shape[0].length / 2),
+          y: 0
+        };
+        setCurrentPiece(newPiece);
+        return newPiece;
+      }, []);
+
+      const isValidMove = (piece, board, dx = 0, dy = 0) => {
+        for (let y = 0; y < piece.shape.length; y++) {
+          for (let x = 0; x < piece.shape[y].length; x++) {
+            if (piece.shape[y][x]) {
+              const newX = piece.x + x + dx;
+              const newY = piece.y + y + dy;
+              if (
+                newX < 0 ||
+                newX >= BOARD_WIDTH ||
+                newY >= BOARD_HEIGHT ||
+                (newY >= 0 && board[newY][newX])
+              ) {
+                return false;
+              }
+            }
+          }
+        }
+        return true;
+      };
+
+      const placePiece = (piece, board) => {
+        const newBoard = board.map(row => [...row]);
+        for (let y = 0; y < piece.shape.length; y++) {
+          for (let x = 0; x < piece.shape[y].length; x++) {
+            if (piece.shape[y][x]) {
+              const boardY = piece.y + y;
+              const boardX = piece.x + x;
+              if (boardY >= 0) {
+                newBoard[boardY][boardX] = 1;
+              }
+            }
+          }
+        }
+        return newBoard;
+      };
+
+      const clearLines = (board) => {
+        const newBoard = board.filter(row => row.some(cell => cell === EMPTY));
+        const linesCleared = BOARD_HEIGHT - newBoard.length;
+        while (newBoard.length < BOARD_HEIGHT) {
+          newBoard.unshift(Array(BOARD_WIDTH).fill(EMPTY));
+        }
+        setScore(prev => prev + linesCleared * 100);
+        return newBoard;
+      };
+
+      const movePiece = (dx, dy) => {
+        if (!currentPiece || gameOver) return;
+        if (isValidMove(currentPiece, board, dx, dy)) {
+          setCurrentPiece(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy }));
+        } else if (dy > 0) {
+          // 碰撞，固定方块
+          const newBoard = placePiece(currentPiece, board);
+          const clearedBoard = clearLines(newBoard);
+          setBoard(clearedBoard);
+          const newPiece = spawnPiece();
+          if (!isValidMove(newPiece, clearedBoard)) {
+            setGameOver(true);
+          }
+        }
+      };
+
+      const rotatePiece = () => {
+        if (!currentPiece || gameOver) return;
+        const rotatedShape = currentPiece.shape[0].map((_, i) =>
+          currentPiece.shape.map(row => row[i]).reverse()
+        );
+        const rotatedPiece = { ...currentPiece, shape: rotatedShape };
+        if (isValidMove(rotatedPiece, board)) {
+          setCurrentPiece(rotatedPiece);
+        }
+      };
+
+      const dropPiece = () => {
+        if (!currentPiece || gameOver) return;
+        let newY = currentPiece.y;
+        while (isValidMove({ ...currentPiece, y: newY + 1 }, board)) {
+          newY++;
+        }
+        setCurrentPiece({ ...currentPiece, y: newY });
+        movePiece(0, 1); // 触发固定逻辑
+      };
+
+      useEffect(() => {
+        if (!currentPiece && !gameOver) {
+          spawnPiece();
+        }
+      }, [currentPiece, gameOver, spawnPiece]);
+
+      useEffect(() => {
+        if (gameOver) return;
+        const interval = setInterval(() => {
+          movePiece(0, 1);
+        }, 500);
+        return () => clearInterval(interval);
+      }, [board, currentPiece, gameOver]);
+
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          switch (e.key) {
+            case 'ArrowLeft':
+              movePiece(-1, 0);
+              break;
+            case 'ArrowRight':
+              movePiece(1, 0);
+              break;
+            case 'ArrowDown':
+              movePiece(0, 1);
+              break;
+            case 'ArrowUp':
+              rotatePiece();
+              break;
+            case ' ':
+              dropPiece();
+              break;
+            default:
+              break;
+          }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, [board, currentPiece, gameOver]);
+
+      const renderBoard = () => {
+        const displayBoard = board.map(row => [...row]);
+        if (currentPiece) {
+          for (let y = 0; y < currentPiece.shape.length; y++) {
+            for (let x = 0; x < currentPiece.shape[y].length; x++) {
+              if (currentPiece.shape[y][x]) {
+                const boardY = currentPiece.y + y;
+                const boardX = currentPiece.x + x;
+                if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH) {
+                  displayBoard[boardY][boardX] = 1;
+                }
+              }
+            }
+          }
+        }
+        return displayBoard;
+      };
+
+      const resetGame = () => {
+        setBoard(createEmptyBoard());
+        setCurrentPiece(null);
+        setGameOver(false);
+        setScore(0);
+      };
+
+      return (
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-4">俄罗斯方块</h1>
+          <div className="mb-4">
+            <p className="text-lg">得分: {score}</p>
+          </div>
+          <div className="inline-block border-2 border-gray-800">
+            {renderBoard().map((row, y) => (
+              <div key={y} className="flex">
+                {row.map((cell, x) => (
+                  <div
+                    key={`${y}-${x}`}
+                    className={`game-cell ${cell ? 'filled' : 'bg-white'}`}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+          {gameOver && (
+            <div className="mt-4">
+              <p className="text-red-500 text-xl">游戏结束!</p>
+              <button
+                onClick={resetGame}
+                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                重新开始
+              </button>
+            </div>
+          )}
+          <div className="mt-4 text-left text-sm text-gray-600">
+            <p>操作说明:</p>
+            <ul className="list-disc pl-5">
+              <li>← → : 左右移动</li>
+              <li>↓ : 加速下降</li>
+              <li>↑ : 旋转方块</li>
+              <li>空格 : 瞬间下落</li>
+            </ul>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+  </body>
+</html>
