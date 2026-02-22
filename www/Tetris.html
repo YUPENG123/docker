@@ -1,80 +1,345 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetris</title>
+    <title>Neon Tetris Pro - 独立版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { display: flex; flex-direction: column; align-items: center; }
-        canvas { border: 1px solid black; }
-        #score { font-size: 24px; }
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 1px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: min(80vw, 320px);
+            aspect-ratio: 10/20;
+        }
+        .cell {
+            aspect-ratio: 1/1;
+            border: 0.5px solid rgba(255, 255, 255, 0.03);
+            transition: background-color 0.1s;
+        }
+        .tetromino { box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3); }
+        
+        /* Tetromino Colors */
+        .bg-I { background-color: #22d3ee; }
+        .bg-J { background-color: #3b82f6; }
+        .bg-L { background-color: #f97316; }
+        .bg-O { background-color: #facc15; }
+        .bg-S { background-color: #22c55e; }
+        .bg-T { background-color: #a855f7; }
+        .bg-Z { background-color: #ef4444; }
     </style>
 </head>
 <body>
-    <h1>Tetris</h1>
-    <canvas id="gameCanvas" width="300" height="600"></canvas>
-    <div id="score">Score: 0</div>
-    <button id="pauseButton">Pause</button>
-    <div id="nextPiecePreview"></div>
-    <script type="module">
-        import React, { useState, useMemo, useEffect } from 'https://cdn.skypack.dev/react';
-
-        const pieceColors = [
-            'cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'
-        ];
-
-        function Tetris() {
-            const [score, setScore] = useState(0);
-            const [isPaused, setIsPaused] = useState(false);
-            const [nextPiece, setNextPiece] = useState(getRandomPiece());
-            const [highScore, setHighScore] = useState(loadHighScore());
-            const [difficulty, setDifficulty] = useState(1000);
-            const canvasRef = React.useRef(null);
-
-            const pieceRotation = useMemo(() => {
-                // Handle piece rotation logic
-            }, [nextPiece]);
-
-            useEffect(() => {
-                const canvas = canvasRef.current;
-                const context = canvas.getContext('2d');
-                // Game loop, rendering, and collision detection here
-            }, [isPaused, nextPiece]);
-
-            useEffect(() => {
-                window.addEventListener('keydown', handleKeyDown);
-                return () => {
-                    window.removeEventListener('keydown', handleKeyDown);
-                };
-            }, []);
-
-            function handleKeyDown(event) {
-                // Handle user input, updating game state
-            }
-
-            function togglePause() {
-                setIsPaused(prev => !prev);
-            }
-
-            function loadHighScore() {
-                return localStorage.getItem('highScore') || 0;
-            }
-
-            function getRandomPiece() {
-                return Math.floor(Math.random() * pieceColors.length);
-            }
-
-            return (
-                <div>
-                    <canvas ref={canvasRef} width="300" height="600" />
-                    <div id="score">Score: {score}</div>
-                    <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
-                    <div id="nextPiecePreview">Next piece: {nextPiece}</div>
+    <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-8 items-start p-4">
+        
+        <!-- Stats Left -->
+        <div class="space-y-6 order-2 lg:order-1">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <div class="text-white/50 uppercase tracking-widest text-xs font-bold mb-2">最高得分</div>
+                <div id="high-score" class="text-4xl font-mono font-bold tracking-tighter">0</div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <div class="text-white/50 uppercase tracking-widest text-xs font-bold mb-4">操作指南</div>
+                <div class="grid grid-cols-2 gap-4 text-sm font-mono text-white/70">
+                    <div>↑ 旋转</div>
+                    <div>↓ 软降</div>
+                    <div>←→ 移动</div>
+                    <div>空格 硬降</div>
                 </div>
-            );
+            </div>
+            <button id="pause-btn" class="w-full py-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-bold uppercase tracking-widest text-sm">
+                暂停
+            </button>
+        </div>
+
+        <!-- Game Board -->
+        <div class="relative order-1 lg:order-2">
+            <div id="game-board" class="game-grid rounded-xl overflow-hidden relative">
+                <!-- Cells will be generated here -->
+            </div>
+            <div id="overlay" class="absolute inset-0 z-20 hidden flex items-center justify-center rounded-xl backdrop-blur-md bg-black/60">
+                <div class="text-center space-y-6 p-8">
+                    <h2 id="overlay-title" class="text-4xl font-black uppercase tracking-tighter italic">游戏结束</h2>
+                    <button id="reset-btn" class="px-8 py-3 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform">
+                        重新开始
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Right -->
+        <div class="space-y-6 order-3">
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <div class="text-white/50 uppercase tracking-widest text-xs font-bold mb-4">下一个</div>
+                <div id="next-preview" class="h-24 flex items-center justify-center">
+                    <!-- Next piece preview -->
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm space-y-6">
+                <div>
+                    <div class="text-white/50 uppercase tracking-widest text-xs font-bold mb-1">得分</div>
+                    <div id="score" class="text-4xl font-mono font-bold text-cyan-400 tracking-tighter">0</div>
+                </div>
+                <div class="h-px bg-white/10"></div>
+                <div>
+                    <div class="text-white/50 uppercase tracking-widest text-xs font-bold mb-1">等级</div>
+                    <div id="level" class="text-2xl font-mono font-bold">1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const COLS = 10;
+        const ROWS = 20;
+        const TETROMINOS = {
+            I: [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
+            J: [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
+            L: [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
+            O: [[1, 1], [1, 1]],
+            S: [[0, 1, 1], [1, 1, 0], [0, 0, 0]],
+            T: [[0, 1, 0], [1, 1, 1], [0, 0, 0]],
+            Z: [[1, 1, 0], [0, 1, 1], [0, 0, 0]]
+        };
+
+        let grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+        let activePiece = null;
+        let nextPieceType = null;
+        let score = 0;
+        let level = 1;
+        let isPaused = false;
+        let isGameOver = false;
+        let dropCounter = 0;
+        let lastTime = 0;
+        let dropInterval = 800;
+
+        const boardElement = document.getElementById('game-board');
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const highScoreElement = document.getElementById('high-score');
+        const nextPreviewElement = document.getElementById('next-preview');
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.getElementById('overlay-title');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        // Initialize board cells
+        for (let i = 0; i < ROWS * COLS; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            boardElement.appendChild(cell);
         }
 
-        ReactDOM.render(<Tetris />, document.getElementById('gameCanvas'));
+        function getRandomType() {
+            const types = Object.keys(TETROMINOS);
+            return types[Math.floor(Math.random() * types.length)];
+        }
+
+        function createPiece(type) {
+            return {
+                pos: { x: Math.floor(COLS / 2) - 1, y: 0 },
+                type: type,
+                shape: TETROMINOS[type]
+            };
+        }
+
+        function draw() {
+            const cells = boardElement.children;
+            for (let y = 0; y < ROWS; y++) {
+                for (let x = 0; x < COLS; x++) {
+                    const idx = y * COLS + x;
+                    cells[idx].className = 'cell';
+                    if (grid[y][x]) {
+                        cells[idx].classList.add('bg-' + grid[y][x], 'tetromino');
+                    }
+                }
+            }
+
+            if (activePiece) {
+                activePiece.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            const py = activePiece.pos.y + y;
+                            const px = activePiece.pos.x + x;
+                            if (py >= 0 && py < ROWS && px >= 0 && px < COLS) {
+                                const idx = py * COLS + px;
+                                cells[idx].classList.add('bg-' + activePiece.type, 'tetromino');
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
+        function collide(piece, offset = { x: 0, y: 0 }) {
+            for (let y = 0; y < piece.shape.length; y++) {
+                for (let x = 0; x < piece.shape[y].length; x++) {
+                    if (piece.shape[y][x]) {
+                        const py = piece.pos.y + y + offset.y;
+                        const px = piece.pos.x + x + offset.x;
+                        if (px < 0 || px >= COLS || py >= ROWS || (py >= 0 && grid[py][px])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function merge() {
+            activePiece.shape.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value) {
+                        const py = activePiece.pos.y + y;
+                        const px = activePiece.pos.x + x;
+                        if (py >= 0) grid[py][px] = activePiece.type;
+                    }
+                });
+            });
+        }
+
+        function clearLines() {
+            let lines = 0;
+            for (let y = ROWS - 1; y >= 0; y--) {
+                if (grid[y].every(cell => cell !== 0)) {
+                    grid.splice(y, 1);
+                    grid.unshift(Array(COLS).fill(0));
+                    lines++;
+                    y++;
+                }
+            }
+            if (lines > 0) {
+                score += lines * 100 * level;
+                scoreElement.innerText = score;
+                if (score > level * 1000) {
+                    level++;
+                    levelElement.innerText = level;
+                    dropInterval *= 0.9;
+                }
+            }
+        }
+
+        function rotate(matrix) {
+            return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse());
+        }
+
+        function drop() {
+            activePiece.pos.y++;
+            if (collide(activePiece)) {
+                activePiece.pos.y--;
+                merge();
+                clearLines();
+                resetPiece();
+            }
+            dropCounter = 0;
+        }
+
+        function resetPiece() {
+            activePiece = createPiece(nextPieceType);
+            nextPieceType = getRandomType();
+            updatePreview();
+            if (collide(activePiece)) {
+                isGameOver = true;
+                overlay.classList.remove('hidden');
+                overlayTitle.innerText = '游戏结束';
+            }
+        }
+
+        function updatePreview() {
+            nextPreviewElement.innerHTML = '';
+            const shape = TETROMINOS[nextPieceType];
+            const container = document.createElement('div');
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = `repeat(${shape[0].length}, 20px)`;
+            container.style.gap = '2px';
+            shape.forEach(row => {
+                row.forEach(cell => {
+                    const div = document.createElement('div');
+                    div.style.width = '20px';
+                    div.style.height = '20px';
+                    div.className = cell ? 'bg-' + nextPieceType + ' rounded-sm' : '';
+                    container.appendChild(div);
+                });
+            });
+            nextPreviewElement.appendChild(container);
+        }
+
+        function update(time = 0) {
+            if (!isPaused && !isGameOver) {
+                const deltaTime = time - lastTime;
+                lastTime = time;
+                dropCounter += deltaTime;
+                if (dropCounter > dropInterval) {
+                    drop();
+                }
+                draw();
+            }
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener('keydown', e => {
+            if (isPaused || isGameOver) return;
+            if (e.key === 'ArrowLeft') {
+                activePiece.pos.x--;
+                if (collide(activePiece)) activePiece.pos.x++;
+            } else if (e.key === 'ArrowRight') {
+                activePiece.pos.x++;
+                if (collide(activePiece)) activePiece.pos.x--;
+            } else if (e.key === 'ArrowDown') {
+                drop();
+            } else if (e.key === 'ArrowUp') {
+                const oldShape = activePiece.shape;
+                activePiece.shape = rotate(activePiece.shape);
+                if (collide(activePiece)) activePiece.shape = oldShape;
+            } else if (e.key === ' ') {
+                while (!collide(activePiece, { x: 0, y: 1 })) {
+                    activePiece.pos.y++;
+                }
+                drop();
+            }
+        });
+
+        pauseBtn.onclick = () => {
+            isPaused = !isPaused;
+            pauseBtn.innerText = isPaused ? '继续' : '暂停';
+            overlay.classList.toggle('hidden', !isPaused);
+            overlayTitle.innerText = '已暂停';
+        };
+
+        resetBtn.onclick = () => {
+            grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            score = 0;
+            level = 1;
+            dropInterval = 800;
+            isGameOver = false;
+            isPaused = false;
+            scoreElement.innerText = '0';
+            levelElement.innerText = '1';
+            overlay.classList.add('hidden');
+            nextPieceType = getRandomType();
+            resetPiece();
+        };
+
+        // Start
+        nextPieceType = getRandomType();
+        resetPiece();
+        update();
     </script>
 </body>
 </html>
